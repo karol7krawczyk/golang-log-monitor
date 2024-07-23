@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log Monitor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        .alert-line {
+            margin-bottom: 0.4rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Custom styles for new message types */
+        .alert-debug {
+            background-color: #d3d3d3;
+            color: #000;
+        }
+
+        /* Light grey */
+        .alert-critical {
+            background-color: #ff6f61;
+            color: #fff;
+        }
+
+        /* Coral */
+        .alert-emergency {
+            background-color: #d32f2f;
+            color: #fff;
+        }
+
+        /* Red */
+        .alert-alert {
+            background-color: #ff9800;
+            color: #fff;
+        }
+
+        /* Orange */
+        .alert-notice {
+            background-color: #2196f3;
+            color: #fff;
+        }
+
+        /* Blue */
+        .alert-other {
+            background-color: #e9ecef;
+            color: #000;
+        }
+
+        .filter-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        #log-messages {
+            max-height: calc(100vh - 160px);
+            overflow-y: auto;
+        }
+
+        body {
+            padding-top: 105px;
+            /* Adjust this to ensure content isn't hidden behind the filter bar */
+        }
+
+        .alert {
+            --bs-alert-padding-x: 0.5rem;
+            --bs-alert-padding-y: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="filter-bar">
+        <div class="container">
+            <div class="row">
+                <div class="col-auto">
+                    <h3 class="mb-3">Log Monitor</h3>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="search-input" placeholder="Search messages">
+                    </div>
+                </div>
+            </div>
+
+            <form id="filter-form" class="form-inline">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="filter-error" checked>
+                    <label class="form-check-label" for="filter-error">Errors</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="filter-info" checked>
+                    <label class="form-check-label" for="filter-info">Info</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="filter-warning" checked>
+                    <label class="form-check-label" for="filter-warning">Warnings</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="filter-debug" checked>
+                    <label class="form-check-label" for="filter-debug">Debug</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="filter-critical" checked>
+                    <label class="form-check-label" for="filter-critical">Critical</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="filter-emergency" checked>
+                    <label class="form-check-label" for="filter-emergency">Emergency</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="filter-alert" checked>
+                    <label class="form-check-label" for="filter-alert">Alert</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="filter-notice" checked>
+                    <label class="form-check-label" for="filter-notice">Notice</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="filter-other" checked>
+                    <label class="form-check-label" for="filter-other">Other</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="filter-file" checked>
+                    <label class="form-check-label" for="filter-file">File</label>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container" id="log-messages">
+    </div>
+
+    <script>
+        const logMessages = document.getElementById('log-messages');
+        const filterForm = document.getElementById('filter-form');
+        const searchInput = document.getElementById('search-input');
+        const socket = new WebSocket('ws://' + window.location.host + '/ws');
+
+        function createMessageElement(messageText) {
+            const lines = messageText.split('\n');
+            const container = document.createElement('div');
+
+            lines.forEach(line => {
+                const lineDiv = document.createElement('div');
+                lineDiv.classList.add('alert', 'alert-line');
+
+                if (line.toLowerCase().includes('error')) {
+                    lineDiv.classList.add('alert-danger', 'message-error');
+                } else if (line.toLowerCase().includes('info')) {
+                    lineDiv.classList.add('alert-info', 'message-info');
+                } else if (line.toLowerCase().includes('warning')) {
+                    lineDiv.classList.add('alert-warning', 'message-warning');
+                } else if (line.toLowerCase().includes('debug')) {
+                    lineDiv.classList.add('alert-debug', 'message-debug');
+                } else if (line.toLowerCase().includes('critical')) {
+                    lineDiv.classList.add('alert-critical', 'message-critical');
+                } else if (line.toLowerCase().includes('emergency')) {
+                    lineDiv.classList.add('alert-emergency', 'message-emergency');
+                } else if (line.toLowerCase().includes('alert')) {
+                    lineDiv.classList.add('alert-alert', 'message-alert');
+                } else if (line.toLowerCase().includes('file:')) {
+                    lineDiv.classList.add('alert-file', 'message-file');
+                } else if (line.toLowerCase().includes('notice')) {
+                    lineDiv.classList.add('alert-notice', 'message-notice');
+                } else {
+                    lineDiv.classList.add('alert-other', 'message-other');
+                }
+
+                lineDiv.textContent = line;
+                container.appendChild(lineDiv);
+            });
+
+            return container;
+        }
+
+        function renderMessages() {
+            const messages = logMessages.querySelectorAll('.alert-line');
+            const showError = document.getElementById('filter-error').checked;
+            const showInfo = document.getElementById('filter-info').checked;
+            const showWarning = document.getElementById('filter-warning').checked;
+            const showDebug = document.getElementById('filter-debug').checked;
+            const showCritical = document.getElementById('filter-critical').checked;
+            const showEmergency = document.getElementById('filter-emergency').checked;
+            const showAlert = document.getElementById('filter-alert').checked;
+            const showNotice = document.getElementById('filter-notice').checked;
+            const showOther = document.getElementById('filter-other').checked;
+            const showFile = document.getElementById('filter-file').checked;
+            const searchTerm = searchInput.value.toLowerCase();
+
+            messages.forEach(message => {
+                const messageText = message.textContent.toLowerCase();
+                const matchesSearch = searchTerm === '' || messageText.includes(searchTerm);
+
+                if (message.classList.contains('message-error') && !showError ||
+                    message.classList.contains('message-info') && !showInfo ||
+                    message.classList.contains('message-other') && !showOther ||
+                    message.classList.contains('message-file') && !showFile ||
+                    message.classList.contains('message-warning') && !showWarning ||
+                    message.classList.contains('message-debug') && !showDebug ||
+                    message.classList.contains('message-critical') && !showCritical ||
+                    message.classList.contains('message-emergency') && !showEmergency ||
+                    message.classList.contains('message-alert') && !showAlert ||
+                    message.classList.contains('message-notice') && !showNotice ||
+                    !matchesSearch) {
+                    message.classList.add('hidden');
+                } else {
+                    message.classList.remove('hidden');
+                }
+            });
+            scrollToBottom(); // Ensure scroll after rendering
+        }
+
+        function scrollToBottom() {
+            logMessages.scrollTop = logMessages.scrollHeight;
+        }
+
+        socket.onmessage = function (event) {
+            const messageElement = createMessageElement(event.data);
+            logMessages.appendChild(messageElement);
+            renderMessages(); // Render messages and scroll to the bottom
+        };
+
+        filterForm.addEventListener('change', renderMessages);
+        searchInput.addEventListener('input', renderMessages);
+    </script>
+</body>
+
+</html>

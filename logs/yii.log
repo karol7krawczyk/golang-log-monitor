@@ -1,0 +1,5 @@
+[2024-07-22 13:15:00] request.INFO: Processing GET request for route /site/index
+[2024-07-22 13:15:00] application.INFO: Controller "site" method "index" was called
+[2024-07-22 13:15:00] viewrenderer.INFO: Rendering view file "/path/to/views/site/index.php"
+[2024-07-22 13:15:00] response.INFO: Sent response with status code 200
+[2024-07-22 13:15:00] application.ERROR: CException: Class 'App\Models\Product' not found in /path/to/app/controllers/ProductController.php on line 45

@@ -1,0 +1,7 @@
+[2024-07-22 13:15:00] request.INFO: Matched route "app_home" (controller: App\Controller\HomeController, method: index)
+[2024-07-22 13:15:00] security.INFO: Security (firewall) was invoked
+[2024-07-22 13:15:00] controller.INFO: Executing controller method "App\Controller\HomeController::index"
+[2024-07-22 13:15:00] templating.INFO: Rendering template "home.html.twig"
+[2024-07-22 13:15:00] response.INFO: Sending response with status code 200
+[2024-07-22 13:15:00] security.ERROR: Login attempt failed for user "admin" (IP: 127.0.0.1)
+[2024-07-22 13:15:00] controller.ERROR: NotFoundHttpException: Controller "App\Controller\NonExistingController" does not exist.

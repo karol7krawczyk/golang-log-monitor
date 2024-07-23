@@ -1,0 +1,13 @@
+services:
+
+  golang:
+    image: golang:1.22
+    container_name: "${COMPOSE_PROJECT_NAME}-golang"
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+    command: sh -c "go mod tidy && go build -v -ldflags='-s -w' -o monitor main.go && go run ."
+    #command: sh -c "tail -f /dev/null"
+

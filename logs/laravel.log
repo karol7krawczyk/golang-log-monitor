@@ -1,0 +1,5 @@
+[2024-07-22 13:15:00] local.INFO: Processing GET request to /home
+[2024-07-22 13:15:00] local.INFO: Routed request to HomeController@index
+[2024-07-22 13:15:00] local.DEBUG: Controller method HomeController@index returned response
+[2024-07-22 13:15:00] local.INFO: Sent response back to the browser (200)
+[2024-07-22 13:15:00] local.INFO: exception 'Illuminate\Database\QueryException' with message 'SQLSTATE[42S02]: Base table or view not found: 1146 Table 'users' doesn't exist (SQL: select * from `users` where `email` = 'johndoe@example.com') in /path/to/app/Http/Controllers/UserController.php on line 123
