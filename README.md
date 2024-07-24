@@ -12,7 +12,7 @@
 - [License](#license)
 
 ## Overview
-This application is designed to monitor log files and broadcast updates over WebSocket to connected clients. It includes a web server to serve static files and handle WebSocket connections, a file system watcher to monitor changes in log files, and basic authentication for security.
+This application monitors log files and broadcasts messages over WebSocket to connected clients. The application acts as a proxy server that directs log files, e.g. from Docker to the web browser. It includes a web server to serve static files and handle WebSocket connections, a file system watcher to monitor changes in log files, and basic authentication for security.
 
 ## Features
 - Accessing the Web Interface: Open a web browser and navigate to http://localhost:8080 (or the host and port specified in monitor_config.ini).
