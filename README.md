@@ -61,7 +61,8 @@ The application uses a configuration file named config.ini to manage various set
     password = admin
 
     [logs]
-    directories = ./logs,./backup
+    directories = ./logs,./static
+    file_extension = log
 ```
 
 

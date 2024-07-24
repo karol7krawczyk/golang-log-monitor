@@ -3,3 +3,53 @@
 [2024-07-22 13:15:00] local.DEBUG: Controller method HomeController@index returned response
 [2024-07-22 13:15:00] local.INFO: Sent response back to the browser (200)
 [2024-07-22 13:15:00] local.INFO: exception 'Illuminate\Database\QueryException' with message 'SQLSTATE[42S02]: Base table or view not found: 1146 Table 'users' doesn't exist (SQL: select * from `users` where `email` = 'johndoe@example.com') in /path/to/app/Http/Controllers/UserController.php on line 123
+[2023-07-24 14:15:32] local.INFO: User registered successfully {"user_id":1,"email":"john.doe@example.com"}
+[2023-07-24 14:15:35] local.DEBUG: Authentication attempt {"email":"john.doe@example.com"}
+[2023-07-24 14:15:36] local.INFO: User logged in {"user_id":1,"email":"john.doe@example.com"}
+[2023-07-24 14:17:02] local.WARNING: Slow query detected {"query":"SELECT * FROM users WHERE email = 'john.doe@example.com'"}
+[2023-07-24 14:20:01] local.ERROR: Exception: Division by zero {"exception":"[object] (ErrorException(code: 0): Division by zero at /var/www/app/Http/Controllers/ExampleController.php:42)"}
+[2023-07-24 14:21:13] local.INFO: Password reset requested {"email":"jane.doe@example.com"}
+[2023-07-24 14:22:25] local.ERROR: Failed login attempt {"email":"jane.doe@example.com"}
+[2023-07-24 14:23:45] local.INFO: Email sent {"to":"jane.doe@example.com","subject":"Password Reset"}
+[2023-07-24 14:25:18] local.DEBUG: Query executed {"sql":"SELECT * FROM users WHERE id = 1"}
+[2023-07-24 14:26:09] local.INFO: User updated profile {"user_id":1,"email":"john.doe@example.com"}
+[2023-07-24 14:28:56] local.DEBUG: Cache hit {"key":"user_1"}
+[2023-07-24 14:29:01] local.INFO: User logged out {"user_id":1}
+[2023-07-24 14:30:45] local.WARNING: Deprecated function used {"function":"mysql_query"}
+[2023-07-24 14:32:10] local.INFO: User registered successfully {"user_id":2,"email":"alice.smith@example.com"}
+[2023-07-24 14:33:20] local.DEBUG: Authentication attempt {"email":"alice.smith@example.com"}
+[2023-07-24 14:33:22] local.INFO: User logged in {"user_id":2,"email":"alice.smith@example.com"}
+[2023-07-24 14:35:19] local.ERROR: Exception: Undefined variable {"exception":"[object] (ErrorException(code: 0): Undefined variable: user at /var/www/app/Http/Controllers/ExampleController.php:88)"}
+[2023-07-24 14:37:06] local.INFO: User updated settings {"user_id":2,"email":"alice.smith@example.com"}
+[2023-07-24 14:38:12] local.DEBUG: Query executed {"sql":"INSERT INTO logs (message) VALUES ('Test')"}
+[2023-07-24 14:39:23] local.INFO: Password reset completed {"user_id":2}
+[2023-07-24 14:40:37] local.WARNING: High memory usage detected {"memory":"512MB"}
+[2023-07-24 14:42:01] local.INFO: User registered successfully {"user_id":3,"email":"bob.jones@example.com"}
+[2023-07-24 14:43:17] local.DEBUG: Authentication attempt {"email":"bob.jones@example.com"}
+[2023-07-24 14:43:19] local.INFO: User logged in {"user_id":3,"email":"bob.jones@example.com"}
+[2023-07-24 14:44:55] local.ERROR: Failed login attempt {"email":"unknown@example.com"}
+[2023-07-24 14:46:23] local.INFO: User requested password reset {"email":"bob.jones@example.com"}
+[2023-07-24 14:47:45] local.WARNING: Session expired {"user_id":3}
+[2023-07-24 14:49:12] local.DEBUG: Query executed {"sql":"DELETE FROM sessions WHERE user_id = 3"}
+[2023-07-24 14:50:30] local.INFO: User logged out {"user_id":2}
+[2023-07-24 14:51:44] local.ERROR: Exception: Invalid argument supplied for foreach() {"exception":"[object] (ErrorException(code: 0): Invalid argument supplied for foreach() at /var/www/app/Http/Controllers/ExampleController.php:123)"}
+[2023-07-24 14:52:57] local.INFO: User updated profile {"user_id":3,"email":"bob.jones@example.com"}
+[2023-07-24 14:54:11] local.DEBUG: Cache miss {"key":"user_3"}
+[2023-07-24 14:55:27] local.INFO: User registered successfully {"user_id":4,"email":"chris.doe@example.com"}
+[2023-07-24 14:56:40] local.DEBUG: Authentication attempt {"email":"chris.doe@example.com"}
+[2023-07-24 14:56:42] local.INFO: User logged in {"user_id":4,"email":"chris.doe@example.com"}
+[2023-07-24 14:58:05] local.WARNING: High CPU usage detected {"cpu":"85%"}
+[2023-07-24 14:59:20] local.ERROR: Exception: File not found {"exception":"[object] (ErrorException(code: 0): File not found at /var/www/app/Http/Controllers/ExampleController.php:155)"}
+[2023-07-24 15:00:33] local.INFO: User requested data export {"user_id":4}
+[2023-07-24 15:01:45] local.DEBUG: Query executed {"sql":"UPDATE users SET active = 1 WHERE id = 4"}
+[2023-07-24 15:02:58] local.INFO: Data export completed {"user_id":4}
+[2023-07-24 15:04:10] local.WARNING: Large file upload {"user_id":4,"file_size":"1GB"}
+[2023-07-24 15:05:23] local.INFO: User logged out {"user_id":3}
+[2023-07-24 15:06:37] local.DEBUG: Query executed {"sql":"SELECT * FROM logs WHERE level = 'ERROR'"}
+[2023-07-24 15:07:49] local.INFO: Password reset completed {"user_id":1}
+[2023-07-24 15:09:01] local.WARNING: Deprecated API used {"endpoint":"/v1/legacy"}
+[2023-07-24 15:10:14] local.ERROR: Exception: Access denied {"exception":"[object] (ErrorException(code: 0): Access denied at /var/www/app/Http/Controllers/ExampleController.php:177)"}
+[2023-07-24 15:11:26] local.INFO: User registered successfully {"user_id":5,"email":"david.clark@example.com"}
+[2023-07-24 15:12:39] local.DEBUG: Authentication attempt {"email":"david.clark@example.com"}
+[2023-07-24 15:12:41] local.INFO: User logged in {"user_id":5,"email":"david.clark@example.com"}
+[2023-07-24 15:14:03] local.WARNING: High disk usage detected {"disk":"90%"}

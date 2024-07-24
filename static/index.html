@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 
 <head>
@@ -16,37 +16,31 @@
             display: none;
         }
 
-        /* Custom styles for new message types */
         .alert-debug {
             background-color: #d3d3d3;
             color: #000;
         }
 
-        /* Light grey */
         .alert-critical {
             background-color: #ff6f61;
             color: #fff;
         }
 
-        /* Coral */
         .alert-emergency {
             background-color: #d32f2f;
             color: #fff;
         }
 
-        /* Red */
         .alert-alert {
             background-color: #ff9800;
             color: #fff;
         }
 
-        /* Orange */
         .alert-notice {
             background-color: #2196f3;
             color: #fff;
         }
 
-        /* Blue */
         .alert-other {
             background-color: #e9ecef;
             color: #000;
@@ -69,7 +63,6 @@
 
         body {
             padding-top: 105px;
-            /* Adjust this to ensure content isn't hidden behind the filter bar */
         }
 
         .alert {
@@ -88,7 +81,7 @@
                 </div>
                 <div class="col">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="search-input" placeholder="Search messages">
+                        <input type="text" class="form-control" id="search-input" placeholder="Search text">
                     </div>
                 </div>
             </div>
@@ -218,7 +211,7 @@
                     message.classList.remove('hidden');
                 }
             });
-            scrollToBottom(); // Ensure scroll after rendering
+            scrollToBottom();
         }
 
         function scrollToBottom() {
@@ -228,7 +221,15 @@
         socket.onmessage = function (event) {
             const messageElement = createMessageElement(event.data);
             logMessages.appendChild(messageElement);
-            renderMessages(); // Render messages and scroll to the bottom
+            renderMessages();
+        };
+
+        socket.onerror = (error) => {
+            console.error('WebSocket error: ', error);
+        };
+
+        socket.onclose = () => {
+            console.log('WebSocket connection closed');
         };
 
         filterForm.addEventListener('change', renderMessages);

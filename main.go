@@ -19,15 +19,16 @@ import (
 )
 
 var (
-	fileOffsets = make(map[string]int64)
-	upgrader    = websocket.Upgrader{}
-	clients     = make(map[*websocket.Conn]bool)
-	mutex       sync.Mutex
-	username    string
-	password    string
-	host        string
-	port        string
-	logDirs     []string
+	fileOffsets    = make(map[string]int64)
+	upgrader       = websocket.Upgrader{}
+	clients        = make(map[*websocket.Conn]bool)
+	mutex          sync.Mutex
+	username       string
+	password       string
+	host           string
+	port           string
+	logDirs        []string
+	file_extension string
 )
 
 func main() {
@@ -40,24 +41,22 @@ func main() {
 	password = cfg.Section("auth").Key("password").String()
 	host = cfg.Section("server").Key("host").String()
 	port = cfg.Section("server").Key("port").String()
+	file_extension = cfg.Section("logs").Key("file_extension").String()
 
-	// Read log directories from the configuration
 	logDirsStr := cfg.Section("logs").Key("directories").String()
 	logDirs = strings.Split(logDirsStr, ",")
 
 	server := &http.Server{
 		Addr:         fmt.Sprintf("%s:%s", host, port),
 		Handler:      nil,
-		ReadTimeout:  10 * time.Second,  // Adjust as necessary
-		WriteTimeout: 10 * time.Second,  // Adjust as necessary
-		IdleTimeout:  120 * time.Second, // Adjust as necessary
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  120 * time.Second,
 	}
 
 	log.Printf("Starting server on %s", fmt.Sprintf("%s:%s", host, port))
 
-	// Serve static files from the static directory
 	http.Handle("/", basicAuth(http.FileServer(http.Dir("./static"))))
-	// Handle WebSocket connections
 	http.Handle("/ws", basicAuth(http.HandlerFunc(handleWebSocket)))
 
 	go func() {
@@ -72,7 +71,6 @@ func main() {
 	}
 	defer watcher.Close()
 
-	// Initialize file offsets and add directories to watcher
 	for _, logDir := range logDirs {
 		if err := initializeFileOffsets(logDir); err != nil {
 			log.Fatalf("Failed to initialize file offsets for %s: %v", logDir, err)
@@ -155,7 +153,7 @@ func watchFiles(watcher *fsnotify.Watcher) {
 			if !ok {
 				return
 			}
-			if strings.HasSuffix(event.Name, ".log") && (event.Op&fsnotify.Write == fsnotify.Write) {
+			if (strings.HasSuffix(event.Name, "."+file_extension) || file_extension == "*") && (event.Op&fsnotify.Write == fsnotify.Write) {
 				lines, path := fileModify(event.Name)
 				if len(lines) > 0 {
 					message := fmt.Sprintf("File: %s\n%s", path, strings.Join(lines, "\n"))
@@ -176,7 +174,7 @@ func initializeFileOffsets(dir string) error {
 		if err != nil {
 			return fmt.Errorf("error walking directory: %w", err)
 		}
-		if strings.HasSuffix(d.Name(), ".log") {
+		if strings.HasSuffix(d.Name(), "."+file_extension) || file_extension == "*" {
 			offset, err := getFileOffset(path)
 			if err != nil {
 				return fmt.Errorf("error initializing file %s: %w", path, err)
